@@ -1,7 +1,166 @@
 # User Guide (1.3.0-rc)
 Primitive guide for users 1.3.0 and above (need to expand)
 
-# Yaml configuration deployment
+## Applying the Plugin
+For both _standard_ and _flexible_ applications, include the plugin in your buildscript
+
+```
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "com.google.cloud.tools:appengine-gradle-plugin:<version>"
+  }
+}
+
+apply plugin: "com.google.cloud.tools.appengine"
+```
+
+The [Cloud SDK](https://cloud.google.com/sdk) is required for this plugin to 
+function. Download and install it before running any tasks.
+
+---
+
+## App Engine Standard
+The plugin will include App Engine standard features if you include an `appengine-web.xml`
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible][#app-engine-flexible] application.
+
+### Tasks
+For App Engine standard, the plugin exposes the following tasks :
+
+#### Local Run
+
+| Task             | Description |
+| ---------------- | ----------- |
+| `appengineRun`   | Run the application locally. |
+| `appengineStart` | Start the application in the background. |
+| `appengineStop`  | Stop a running application. |
+
+#### Deployment
+
+| Task                      | Description |
+| ------------------------- | ----------- |
+| `appengineStage`          | Stage an application for deployments. |
+| `appengineDeploy`         | Deploy an application. |
+| `appengineDeployCron`     | Deploy cron configuration. |
+| `appengineDeployDispatch` | Deploy dispatch configuration. |
+| `appengineDeployDos`      | Deploy dos configuration. |
+| `appengineDeployIndex`    | Deploy datastore index configuration. |
+| `appengineDeployQueue`    | Deploy queue configuration. |
+
+#### Other
+
+| Task                         | Description |
+| ---------------------------- | ----------- |
+| `appengineShowConfiguration` | Print out the appengine gradle plugin configuration |
+
+### Configuration
+Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
+and deploy an application, however if you chose to customize your configuration, the standard plugin
+can be configured using the `appengine` configuration closure. 
+
+To print the **default** configuration values, run `appengineShowConfiguration`. It is recommended
+you check the default before setting anything manually.
+
+```groovy
+appengine {
+  tools {
+    // configure the Cloud Sdk tooling
+  }
+  run {
+    // configure local run
+  }
+  stage {
+    // configure staging for deployment
+  }
+  deploy {
+    // configure deployment
+  }
+}
+```
+
+##### Tools
+The `tools` configuration has the following parameters.
+
+| Parameter             | Description |
+| -------------- | ----------- |
+| `cloudSdkHome` | Location of to the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
+
+##### Run
+The `run` configuration has the following parameters. Note that only a subset are valid for Dev App Server version "1"
+and all are valid for Dev App Server version "2-alpha"
+
+Valid for versions "1" and "2-alpha"
+
+| Parameter             | Description |
+| --------------------- | ----------- |
+| ~~`appYamls`~~        | Deprecated in favor of `services` |
+| `jvmFlags`            | JVM flags to pass to the App Server Java process. |
+| `host`                | Application host address. |
+| `port`                | Application host port. |
+| `startSuccessTimeout` | Amount of time in seconds to wait for the Dev App Server to start in the background. |
+| `serverVersion`       | Server versions to use, options are "1" or "2-alpha" |
+| `services`            | List of services to run |
+ 
+Only valid for versions "2-alpha"
+
+| Parameter (2-alpha only) |
+| ------------------------ |
+| `adminHost`              |
+| `adminPort`              |
+| `allowSkippedFiles`      |
+| `apiPort`                |
+| `authDomain`             |
+| `automaticRestart`       |
+| `clearDatastore`         |
+| `customEntrypoint`       |
+| `datastorePath`          |
+| `defaultGcsBucketName`   |
+| `devAppserverLogLevel`   |
+| `logLevel`               |
+| `maxModuleInstances`     |
+| `pythonStartupArgs`      |
+| `pythonStartupScript`    |
+| `runtime`                |
+| `skipSdkUpdateCheck`     |
+| `storagePath`            |
+| `threadsafeOverride`     |
+| `useMtimeFileWatcher`    |
+
+##### Stage
+The `stage` configuration has the following parameters.
+
+| Parameter               | Description |
+| ----------------------- | ----------- |
+| `compileEncoding`       | The character encoding to use when compiling JSPs. |
+| `deleteJsps`            | Delete the JSP source files after compilation. |
+| `disableJarJsps`        | Disable adding the classes generated from JSPs. |
+| `disableUpdateCheck`    | Disable checking for App Engine SDK updates. |
+| `enableJarClasses`      | Jar the WEB-INF/classes content. |
+| `enableJarSplitting`    | Split JAR files larger than 10 MB into smaller fragments. |
+| `enableQuickstart`      | Use Jetty quickstart to process servlet annotations. |
+| `jarSplittingExcludes`  | Exclude files that match the list of comma separated SUFFIXES from all JAR files. |
+| `sourceDirectory`       | The location of the compiled web application files, or the exploded WAR. This is used as the source for staging. |
+| `stagingDirectory`      | The directory to which to stage the application. Default is build/staged-app. |
+
+##### Deploy
+The `deploy` configuration has the following parameters, deploy has some Flexible environment only parameters that
+are not listed here and will just be ignored.
+
+| Parameter             | Description |
+| --------------------- | ----------- |
+| `appengineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
+| `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
+| `deployables`         | The YAML files for the services or configurations you want to deploy. |
+| `project`             | The Google Cloud Project target for this deployment. |
+| `promote`             | Promote the deployed version to receive all traffic. |
+| `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
+| `version`             | The version of the app that will be created or replaced by this deployment. If you do not specify a version, one will be generated for you by the Cloud SDK. |
+
+---
+
+### How do I deploy my project Configuration Files?
 
 You can now deploy index.yaml/dos.yaml/etc without configuring deployables for
 both flexible and standard environments.
@@ -16,6 +175,10 @@ Use the following tasks
 The deployment source directory can be overridden by setting the `appEngineDirectory` parameter
 in the deploy configuration.
 
+For standard it defaults to `${buildDir}/staged-app/WEB-INF/appengine-generated`, you should probably
+not change this configuration, for standard configured projects, this is the location that your 
+xml configs are converted into yaml for deployment.
+
 ```groovy
 appengine {
   deploy {
@@ -23,32 +186,11 @@ appengine {
   }
 }
 ```
-* For standard it defaults to `${buildDir}/staged-app/WEB-INF/appengine-generated`
-* For flexible it defaults to `src/main/appengine`
 
-
-# Dev App Server v1
-
-Dev App Server v1 is the default configured local run server from version 1.3.0 onwards.
-
-## Parameters 
-
-Dev App Server v1 parameters continue to be set in the `appengine.run` configuration closure,
-It uses a subset of Dev App Server 2 parameters that have been available as part of the
-run configuration.
-
-* ~~`appYamls`~~ - deprecated in favor of `services`.
-* `services` - a list of services to run [default is the current module].
-* `host` - host address to run on [default is localhost].
-* `port` - port to run on [default is 8080].
-* `jvmFlags` - jvm flags to send the to the process that started the dev server.
-
-Any other configuration parameter is Dev App Server v2 ONLY, and will print a warning and
-be ignored.
-
-## Debugger
+### How do I debug Dev Appserver v1?
 
 You can debug the Dev App Server v1 using the jvmFlags
+
 ```groovy
 appengine {
   run {
@@ -57,7 +199,7 @@ appengine {
 }
 ```
 
-## Putting the Datastore somewhere else (so it's not deleted across rebuilds)
+### How do I put datastore somewhere else (so it's not deleted across rebuilds)?
 ```groovy
 appengine {
   run {
@@ -66,7 +208,7 @@ appengine {
 }
 ```
 
-## Running Multiple Modules
+### How do I run multiple modules on the Dev App Server v1?
 
 Multimodule support can be done by adding all the runnable modules to a single runner's configuration (which currently
 must be an appengine-standard application), and using a helper method to tie everything together.
@@ -94,7 +236,7 @@ def getExplodedAppDir(Project p) {
 }
 ```
 
-## Switch to Dev App Server v2-alpha
+### I want to use Dev Appserver 2 (alpha), how do I switch to it?
 
 To switch back to the Dev App Server v2-alpha (that was default in version < 1.3.0) use the `serverVersion` parameter
 
@@ -105,3 +247,8 @@ appengine {
   }
 }
 ```
+
+---
+
+## App Engine Flexible
+
