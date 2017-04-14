@@ -41,7 +41,7 @@ For App Engine standard, the plugin exposes the following tasks :
 
 | Task                      | Description |
 | ------------------------- | ----------- |
-| `appengineStage`          | Stage an application for deployments. |
+| `appengineStage`          | Stage an application for deployment. |
 | `appengineDeploy`         | Deploy an application. |
 | `appengineDeployCron`     | Deploy cron configuration. |
 | `appengineDeployDispatch` | Deploy dispatch configuration. |
@@ -53,7 +53,7 @@ For App Engine standard, the plugin exposes the following tasks :
 
 | Task                         | Description |
 | ---------------------------- | ----------- |
-| `appengineShowConfiguration` | Print out the appengine gradle plugin configuration |
+| `appengineShowConfiguration` | Print out the appengine standard gradle plugin configuration |
 
 ### Configuration
 Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
@@ -142,7 +142,7 @@ The `stage` configuration has the following parameters.
 | `enableQuickstart`      | Use Jetty quickstart to process servlet annotations. |
 | `jarSplittingExcludes`  | Exclude files that match the list of comma separated SUFFIXES from all JAR files. |
 | `sourceDirectory`       | The location of the compiled web application files, or the exploded WAR. This is used as the source for staging. |
-| `stagingDirectory`      | The directory to which to stage the application. Default is build/staged-app. |
+| `stagingDirectory`      | The directory to which to stage the application. |
 
 ##### Deploy
 The `deploy` configuration has the following parameters, deploy has some Flexible environment only parameters that
@@ -150,7 +150,7 @@ are not listed here and will just be ignored.
 
 | Parameter             | Description |
 | --------------------- | ----------- |
-| `appengineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
+| `appEngineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
 | `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
 | `deployables`         | The YAML files for the services or configurations you want to deploy. |
 | `project`             | The Google Cloud Project target for this deployment. |
@@ -251,4 +251,82 @@ appengine {
 ---
 
 ## App Engine Flexible
+The plugin will include App Engine standard features if you do **NOT** include an `appengine-web.xml`
+in `src/main/webapp/WEB-INF/`.
 
+### Tasks
+For App Engine flexible, the plugin exposes the following tasks :
+
+#### Deployment
+
+| Task                      | Description |
+| ------------------------- | ----------- |
+| `appengineStage`          | Stage an application for deployment. |
+| `appengineDeploy`         | Deploy an application. |
+| `appengineDeployCron`     | Deploy cron configuration. |
+| `appengineDeployDispatch` | Deploy dispatch configuration. |
+| `appengineDeployDos`      | Deploy dos configuration. |
+| `appengineDeployIndex`    | Deploy datastore index configuration. |
+| `appengineDeployQueue`    | Deploy queue configuration. |
+
+#### Other
+
+| Task                         | Description |
+| ---------------------------- | ----------- |
+| `appengineShowConfiguration` | Print out the appengine flexible gradle plugin configuration |
+
+### Configuration
+Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
+and deploy an application, however if you chose to customize your configuration, the flexible plugin
+can be configured using the `appengine` configuration closure. 
+
+To print the **default** configuration values, run `appengineShowConfiguration`. It is recommended
+you check the default before setting anything manually.
+
+```groovy
+appengine {
+  tools {
+    // configure the Cloud Sdk tooling
+  }
+  stage {
+    // configure staging for deployment
+  }
+  deploy {
+    // configure deployment
+  }
+}
+```
+
+##### Tools
+The `tools` configuration has the following parameters.
+
+| Parameter             | Description |
+| -------------- | ----------- |
+| `cloudSdkHome` | Location of to the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
+
+
+##### Stage
+The `stage` configuration has the following parameters.
+
+| Parameter            | Description |
+| -------------------- | ----------- |
+| `appEngineDirectory` | The directory that contains app.yaml. |
+| `dockerDirectory`    | The directory that contains Dockerfile and other docker context. |
+| `artifact`           | The artifact to deploy (a file, like a .jar or a .war). |
+| `stagingDirectory`   | The directory to which to stage the application |
+
+##### Deploy
+The `deploy` configuration has the following parameters, deploy has some Flexible environment only parameters that
+are not listed here and will just be ignored.
+
+| Parameter             | Description |
+| --------------------- | ----------- |
+| `appEngineDirectory`  | Location of configuration files (cron.yaml, dos.yaml, etc) for configuration specific deployments. |
+| `bucket`              | The Google Cloud Storage bucket used to stage files associated with the deployment. |
+| `deployables`         | The YAML files for the services or configurations you want to deploy. |
+| `imageUrl`            | Deploy with a Docker URL from the Google container registry. |
+| `project`             | The Google Cloud Project target for this deployment. |
+| `promote`             | Promote the deployed version to receive all traffic. |
+| `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
+| `stopPreviousVersion` | Stop the previously running version of this service after deploying a new one that receives all traffic. |
+| `version`             | The version of the app that will be created or replaced by this deployment. If you do not specify a version, one will be generated for you by the Cloud SDK. |
