@@ -17,14 +17,14 @@ buildscript {
 apply plugin: "com.google.cloud.tools.appengine"
 ```
 
-The [Cloud SDK](https://cloud.google.com/sdk) is required for this plugin to 
+The [Cloud SDK](https://cloud.google.com/sdk) is required for this plugin to
 function. Download and install it before running any tasks.
 
 ---
 
 ## App Engine Standard
-The plugin will include App Engine standard features if you include an `appengine-web.xml`
-in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible][#app-engine-flexible] application.
+The plugin will target the App Engine standard environment if you include an `appengine-web.xml`
+in `src/main/webapp/WEB-INF/`, otherwise it will assume it is an [App Engine flexible](#app-engine-flexible) application.
 
 ### Tasks
 For App Engine standard, the plugin exposes the following tasks :
@@ -56,12 +56,15 @@ For App Engine standard, the plugin exposes the following tasks :
 | `appengineShowConfiguration` | Print out the appengine standard gradle plugin configuration |
 
 ### Configuration
-Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
-and deploy an application, however if you chose to customize your configuration, the standard plugin
-can be configured using the `appengine` configuration closure. 
+Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can run and deploy
+your application using the defaults provided by the plugin. To view the default configuration values, run :
 
-To print the **default** configuration values, run `appengineShowConfiguration`. It is recommended
-you check the default before setting anything manually.
+```
+$ ./gradlew appengineShowConfiguration
+```
+
+If you wish to customize the plugin further, the standard plugin can be configured using the `appengine`
+configuration closure.
 
 ```groovy
 appengine {
@@ -81,15 +84,15 @@ appengine {
 ```
 
 ##### Tools
-The `tools` configuration has the following parameters.
+The `tools` configuration has the following parameters :
 
-| Parameter             | Description |
+| Parameter      | Description |
 | -------------- | ----------- |
-| `cloudSdkHome` | Location of to the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
+| `cloudSdkHome` | Location of the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
 
 ##### Run
-The `run` configuration has the following parameters. Note that only a subset are valid for Dev App Server version "1"
-and all are valid for Dev App Server version "2-alpha"
+The `run` configuration has the following parameters :
+Note that only a subset are valid for Dev App Server version "1" and all are valid for Dev App Server version "2-alpha".
 
 Valid for versions "1" and "2-alpha"
 
@@ -102,7 +105,7 @@ Valid for versions "1" and "2-alpha"
 | `startSuccessTimeout` | Amount of time in seconds to wait for the Dev App Server to start in the background. |
 | `serverVersion`       | Server versions to use, options are "1" or "2-alpha" |
 | `services`            | List of services to run |
- 
+
 Only valid for versions "2-alpha"
 
 | Parameter (2-alpha only) |
@@ -129,7 +132,7 @@ Only valid for versions "2-alpha"
 | `useMtimeFileWatcher`    |
 
 ##### Stage
-The `stage` configuration has the following parameters.
+The `stage` configuration has the following parameters :
 
 | Parameter               | Description |
 | ----------------------- | ----------- |
@@ -145,8 +148,8 @@ The `stage` configuration has the following parameters.
 | `stagingDirectory`      | The directory to which to stage the application. |
 
 ##### Deploy
-The `deploy` configuration has the following parameters, deploy has some Flexible environment only parameters that
-are not listed here and will just be ignored.
+The `deploy` configuration has the following parameters :
+Deploy has some Flexible environment only parameters that are not listed here and will just be ignored.
 
 | Parameter             | Description |
 | --------------------- | ----------- |
@@ -165,7 +168,7 @@ are not listed here and will just be ignored.
 You can now deploy index.yaml/dos.yaml/etc without configuring deployables for
 both flexible and standard environments.
 
-Use the following tasks
+Use the following tasks :
 * `appengineDeployCron`
 * `appengineDeployDispatch`
 * `appengineDeployDos`
@@ -176,7 +179,7 @@ The deployment source directory can be overridden by setting the `appEngineDirec
 in the deploy configuration.
 
 For standard it defaults to `${buildDir}/staged-app/WEB-INF/appengine-generated`, you should probably
-not change this configuration, for standard configured projects, this is the location that your 
+not change this configuration, for standard configured projects, this is the location that your
 xml configs are converted into yaml for deployment.
 
 ```groovy
@@ -217,7 +220,7 @@ appengine {
   run {
     // configure the app to point to the right service directories
     services = [
-        getExplodedAppDir(project), 
+        getExplodedAppDir(project),
         getExplodedAppDir(project(":another-module"))
     ]
   }
@@ -251,7 +254,7 @@ appengine {
 ---
 
 ## App Engine Flexible
-The plugin will include App Engine standard features if you do **NOT** include an `appengine-web.xml`
+The plugin will target the App Engine flexible environment if you do **NOT** include an `appengine-web.xml`
 in `src/main/webapp/WEB-INF/`.
 
 ### Tasks
@@ -278,7 +281,7 @@ For App Engine flexible, the plugin exposes the following tasks :
 ### Configuration
 Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
 and deploy an application, however if you chose to customize your configuration, the flexible plugin
-can be configured using the `appengine` configuration closure. 
+can be configured using the `appengine` configuration closure.
 
 To print the **default** configuration values, run `appengineShowConfiguration`. It is recommended
 you check the default before setting anything manually.
@@ -298,15 +301,15 @@ appengine {
 ```
 
 ##### Tools
-The `tools` configuration has the following parameters.
+The `tools` configuration has the following parameters :
 
-| Parameter             | Description |
+| Parameter      | Description |
 | -------------- | ----------- |
-| `cloudSdkHome` | Location of to the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
+| `cloudSdkHome` | Location of the cloud sdk, the plugin will try to find a CloudSdkHome is none is specified. |
 
 
 ##### Stage
-The `stage` configuration has the following parameters.
+The `stage` configuration has the following parameters :
 
 | Parameter            | Description |
 | -------------------- | ----------- |
@@ -316,8 +319,7 @@ The `stage` configuration has the following parameters.
 | `stagingDirectory`   | The directory to which to stage the application |
 
 ##### Deploy
-The `deploy` configuration has the following parameters, deploy has some Flexible environment only parameters that
-are not listed here and will just be ignored.
+The `deploy` configuration has the following parameters :
 
 | Parameter             | Description |
 | --------------------- | ----------- |
