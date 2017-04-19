@@ -2,7 +2,7 @@
 Primitive guide for users 1.3.0 and above (need to expand)
 
 ## Applying the Plugin
-For both _standard_ and _flexible_ applications, include the plugin in your buildscript
+For both _standard_ and _flexible_ applications, include the plugin in your buildscript :
 
 ```
 buildscript {
@@ -192,7 +192,7 @@ appengine {
 
 ### How do I debug Dev Appserver v1?
 
-You can debug the Dev App Server v1 using the jvmFlags
+You can debug the Dev App Server v1 using the jvmFlags :
 
 ```groovy
 appengine {
@@ -279,12 +279,15 @@ For App Engine flexible, the plugin exposes the following tasks :
 | `appengineShowConfiguration` | Print out the appengine flexible gradle plugin configuration |
 
 ### Configuration
-Once you've configured `gcloud` in the Cloud SDK, no gradle configuration should be needed to run
-and deploy an application, however if you chose to customize your configuration, the flexible plugin
-can be configured using the `appengine` configuration closure.
+Once you've [initialized](https://cloud.google.com/sdk/docs/initializing) `gcloud` you can deploy
+your application using the defaults provided by the plugin. To view the default configuration values, run :
 
-To print the **default** configuration values, run `appengineShowConfiguration`. It is recommended
-you check the default before setting anything manually.
+```
+$ ./gradlew appengineShowConfiguration
+```
+
+If you wish to customize the plugin further, the standard plugin can be configured using the `appengine`
+configuration closure.
 
 ```groovy
 appengine {
