@@ -159,6 +159,7 @@ Deploy has some Flexible environment only parameters that are not listed here an
 | `project`             | The Google Cloud Project target for this deployment. |
 | `promote`             | Promote the deployed version to receive all traffic. |
 | `server`              | The App Engine server to connect to. Typically, you do not need to change this value. |
+| `stopPreviousVersion` | Stop the previously running version of this service after deploying a new one that receives all traffic. |
 | `version`             | The version of the app that will be created or replaced by this deployment. If you do not specify a version, one will be generated for you by the Cloud SDK. |
 
 ---
