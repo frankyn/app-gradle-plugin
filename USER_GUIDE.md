@@ -1,5 +1,4 @@
-# User Guide (1.3.0-rc)
-Primitive guide for users 1.3.0 and above (need to expand)
+# User Guide
 
 ## Applying the Plugin
 For both _standard_ and _flexible_ applications, include the plugin in your buildscript :
@@ -106,7 +105,7 @@ Valid for versions "1" and "2-alpha"
 | `serverVersion`       | Server versions to use, options are "1" or "2-alpha" |
 | `services`            | List of services to run |
 
-Only valid for versions "2-alpha"
+Only valid for version "2-alpha"
 
 | Parameter (2-alpha only) |
 | ------------------------ |
