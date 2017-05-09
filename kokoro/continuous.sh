@@ -8,7 +8,5 @@ set -x
 cd github/app-gradle-plugin
 sudo /opt/google-cloud-sdk/bin/gcloud components update
 sudo /opt/google-cloud-sdk/bin/gcloud components install app-engine-java
-./gradlew googleJavaFormat
-git diff
-#./gradlew check
+./gradlew check
 # bash <(curl -s https://codecov.io/bash)
