@@ -7,7 +7,7 @@ call gcloud.cmd components install app-engine-java --quiet
 
 call gradlew.bat googleJavaFormat
 git config color.diff.whitespace "red reverse"
-git --color -R diff
+git diff --color -R
 REM call gradlew.bat check
 REM curl -s https://codecov.io/bash | bash
 
