@@ -10,7 +10,7 @@ All notable changes to this project will be documented in this file.
 
 ## 1.3.1
 ### Added
-* New `environment` option in the `run` closure to pass environment variables to Dev App Server ([#128](../../pulls/128))
+* New `environment` option in the `run` closure to pass environment variables to Dev App Server ([#128](../../pulls/128)) [appengine-plugins-core/381](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/381)
 * Automatically read environment from `appengine-web.xml` [appengine-plugins-core/378](https://github.com/GoogleCloudPlatform/appengine-plugins-core/pull/378)
 
 ### Changed
