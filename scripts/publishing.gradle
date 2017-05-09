@@ -1,3 +1,6 @@
+// add this into build.gradle buildscript.classpath if you want to use this script
+// classpath 'com.bmuschko:gradle-nexus-plugin:2.3.1'
+
 apply plugin: 'com.bmuschko.nexus'
 
 modifyPom {
