@@ -1,3 +1,5 @@
+@echo on
+
 cd github/app-gradle-plugin
 
 call gcloud.cmd components update --quiet
