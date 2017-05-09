@@ -15,7 +15,7 @@
  *
  */
 
-apply plugin: 'maven-publish'
+apply plugin: 'maven'
 
 task sourceJar(type: Jar) {
   from sourceSets.main.allJava
@@ -27,34 +27,42 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
   classifier = 'javadoc'
 }
 
-// this is the only way for us to create a pom using the gradle tools
-// usually this same config is used to deploy, but we're deploying
-// using another tool and really just want the pom.
-publishing {
-  publications {
-    release(MavenPublication) {
-      pom.withXml {
-        def root = asNode()
-        root.appendNode('name', 'App Engine Gradle Plugin')
-        root.appendNode('description', 'This Gradle plugin provides tasks to build and deploy Google App Engine applications.')
-        root.appendNode('url', 'https://github.com/GoogleCloudPlatform/app-gradle-plugin')
-        root.appendNode('inceptionYear', '2016')
+task writePom {
+  project.afterEvaluate {
+    def outputFile = file("$buildDir/pom/${project.name}-${project.version}.pom")
+    outputs.file outputFile
 
-        def scm = root.appendNode('scm')
-        scm.appendNode('url', 'https://github.com/GoogleCloudPlatform/app-gradle-plugin')
-        scm.appendNode('connection', 'scm:https://github.com/GoogleCloudPlatform/app-gradle-plugin.git')
-        scm.appendNode('developerConnection', 'scm:git://github.com/GoogleCloudPlatform/app-gradle-plugin.git')
-        
-        def license = root.appendNode('licenses').appendNode('license')
-        license.appendNode('name', 'The Apache Software License, Version 2.0')
-        license.appendNode('url', 'http://www.apache.org/licenses/LICENSE-2.0.txt')
-        license.appendNode('distribution', 'repo')
+    doLast {
+      pom {
+        project {
+          name 'App Engine Gradle Plugin'
+          description 'This Gradle plugin provides tasks to build and deploy Google App Engine applications.'
+          url 'https://github.com/GoogleCloudPlatform/app-gradle-plugin'
+          inceptionYear '2016'
 
-        def developer = root.appendNode('developers').appendNode('developer')
-        developer.appendNode('id', 'loosebazooka')
-        developer.appendNode('name', 'Appu Goundan')
-        developer.appendNode('email', 'appu@google.com')
-      }
+          scm {
+            url 'https://github.com/GoogleCloudPlatform/app-gradle-plugin'
+            connection 'scm:https://github.com/GoogleCloudPlatform/app-gradle-plugin.git'
+            developerConnection 'scm:git://github.com/GoogleCloudPlatform/app-gradle-plugin.git'
+          }
+
+          licenses {
+            license {
+              name 'The Apache Software License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+              distribution 'repo'
+            }
+          }
+
+          developers {
+            developer {
+              id 'loosebazooka'
+              name 'Appu Goundan'
+              email 'appu@google.com'
+            }
+          }
+        }
+      }.writeTo(outputFile)
     }
   }
 }
@@ -63,13 +71,7 @@ task prepareRelease(type: Copy) {
   from jar
   from sourceJar
   from javadocJar
-  project.afterEvaluate {
-    // workaround for lazily generated pom publication task 
-    // https://discuss.gradle.org/t/gradlew-tasks-fails-in-2-4-due-to-not-finding-generatepom-task/10097/9
-    tasks.realize() 
-    from tasks.generatePomFileForReleasePublication
-    rename("pom-default.xml", "pom-${project.version}.xml")
-  }
+  from writePom
 
   into "${buildDir}/release"
 
