@@ -5,7 +5,7 @@ set -e
 # Display commands to stderr.
 set -x
 
-curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-154.0.1-darwin-x86_64.tar.gz
+curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-154.0.1-darwin-x86_64.tar.gz -o google-cloud-sdk-154.0.1-darwin-x86_64.tar.gz
 tar -xzvf google-cloud-sdk-154.0.1-darwin-x86_64.tar.gz
 ./google-cloud-sdk/install.sh
 
