@@ -15,5 +15,5 @@ tar -xzf google-cloud-sdk-154.0.1-darwin-x86_64.tar.gz
 GOOGLE_CLOUD_SDK_HOME=`pwd`/google-cloud-sdk
 
 cd github/app-gradle-plugin
-./gradlew check --debug
+./gradlew check
 # bash <(curl -s https://codecov.io/bash)
