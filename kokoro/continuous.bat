@@ -5,10 +5,9 @@ cd github/app-gradle-plugin
 call gcloud.cmd components update --quiet
 call gcloud.cmd components install app-engine-java --quiet
 
-rem call gradlew.bat googleJavaFormat
-rem git config color.diff.whitespace "red reverse"
-rem git diff --color --word-diff-regex=.
-call gradlew.bat check
+rem skip format check, because it fails for some line ending weirdness
+rem and it's anyway checked on ubuntu
+call gradlew.bat check -x verifyGoogleJavaFormat
 REM curl -s https://codecov.io/bash | bash
 
 exit /b %ERRORLEVEL%
