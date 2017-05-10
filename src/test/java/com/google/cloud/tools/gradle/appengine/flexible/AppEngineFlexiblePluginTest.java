@@ -164,14 +164,12 @@ public class AppEngineFlexiblePluginTest {
     StageFlexibleExtension stageExt = new ExtensionUtil(ext).get("stage");
 
     Assert.assertEquals(new File(p.getBuildDir(), "staged-app"), stageExt.getStagingDirectory());
-    Assert.assertTrue(
-        Files.isSameFile(
-            testProjectDir.getRoot().getAbsoluteFile().toPath().resolve("src/main/appengine"),
-            stageExt.getAppEngineDirectory().toPath()));
-    Assert.assertTrue(
-        Files.isSameFile(
-            testProjectDir.getRoot().toPath().resolve("src/main/appengine"),
-            deployExt.getAppEngineDirectory().toPath()));
+    Assert.assertEquals(
+        testProjectDir.getRoot().toPath().toRealPath().resolve("src/main/appengine"),
+        stageExt.getAppEngineDirectory().toPath());
+    Assert.assertEquals(
+        testProjectDir.getRoot().toPath().toRealPath().resolve("src/main/appengine"),
+        deployExt.getAppEngineDirectory().toPath());
     Assert.assertEquals(
         (((War) p.getProperties().get("war")).getArchivePath()), stageExt.getArtifact());
     Assert.assertFalse(new File(testProjectDir.getRoot(), "src/main/docker").exists());
