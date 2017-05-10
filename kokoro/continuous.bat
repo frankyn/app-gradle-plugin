@@ -5,7 +5,7 @@ cd github/app-gradle-plugin
 rem call gcloud.cmd components update --quiet
 rem call gcloud.cmd components install app-engine-java --quiet
 
-rem call gradlew.bat googleJavaFormat
+call gradlew.bat googleJavaFormat
 git config color.diff.whitespace "red reverse"
 git diff --color -R --ws-error-highlight=all
 REM call gradlew.bat check
