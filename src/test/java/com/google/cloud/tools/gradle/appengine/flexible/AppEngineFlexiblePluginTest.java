@@ -166,7 +166,7 @@ public class AppEngineFlexiblePluginTest {
     Assert.assertEquals(new File(p.getBuildDir(), "staged-app"), stageExt.getStagingDirectory());
     Assert.assertTrue(
         Files.isSameFile(
-            testProjectDir.getRoot().toPath().resolve("src/main/appengine"),
+            testProjectDir.getRoot().getAbsoluteFile().toPath().resolve("src/main/appengine"),
             stageExt.getAppEngineDirectory().toPath()));
     Assert.assertTrue(
         Files.isSameFile(
